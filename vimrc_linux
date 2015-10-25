@@ -1,0 +1,89 @@
+if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+   set fileencodings=utf-8,latin1
+endif
+
+set nocompatible	" Use Vim defaults (much better!)
+set bs=2		" allow backspacing over everything in insert mode
+"set ai			" always set autoindenting on
+"set backup		" keep a backup file
+set nobackup
+set viminfo='20,\"50	" read/write a .viminfo file, don't store more
+			" than 50 lines of registers
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+
+" Only do this part when compiled with support for autocommands
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " In text files, always limit the width of text to 78 characters
+  autocmd BufRead *.txt set tw=78
+  " When editing a file, always jump to the last cursor position
+  autocmd BufReadPost *
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+  \   exe "normal g'\"" |
+  \ endif
+au BufWritePost *.c,*.cpp,*.h,*.cl silent! !ctags -R --langmap=c:+.cl --exclude="*.html" --exclude="ignore" --exclude="*x86_64*" --exclude="*.so" --exclude=".*.swp" --exclude="*.js" --exclude="*.css" --exclude="*.p*" --exclude="*sqlite-amalgamation*" &
+au BufWritePost *.c,*.cpp,*.h set tw=80 fo=croqt
+au BufWritePost *.pm,*.pl silent! !ctags -R -a --Perl-kinds=+ --exclude="blib" --exclude="_build" > /dev/null 2>&1 &
+au BufNewFile,BufRead *.pm,*.pl set textwidth=80
+"for PDL::PP files
+au BufNewFile,BufRead *.pd,*.pp set filetype=perl tw=80
+au BufNewFile,BufRead *.sql set textwidth=80
+au BufNewFile,BufRead *.tt2,*.tt set filetype=tt2html
+"OpenCL syntax highlighting
+au BufNewFile,BufRead *.cl set filetype=opencl
+au BufWritePost *.cl set tw=80 fo=croqt
+"Ragel syntax highlighting
+au BufNewFile,BufRead *.rl set filetype=ragel
+au BufWritePost *.rl set tw=80 fo=croqt
+"NASM syntax  highlighting
+au BufNewFile,BufRead *.asm,*.ash set filetype=nasm tw=80 fo=croqt
+au BufWritePost *.asm,*.ash set tw=80 fo=croqt
+"Tagging for VHDL
+au BufNewFile,BufRead *.vhd,*.VHD,*.vhdl,*.VHDL set filetype=vhdl
+au BufWritePost *.vhd,*.VHD silent! !ctags -R --language-force=VHDL --exclude="_build*" > /dev/null 2>&1 &
+"Set filetype for bitbake
+au BufNewFile,BufRead *.inc,*.bb,*.bbclass set filetype=bitbake
+"Set VIC highlighting
+au BufNewFile,BufRead *.vic set filetype=vic
+au BufNewFile,BufRead *.md set filetype=markdown tw=80 fo=croqt
+else 
+  set autoindent 	"always set autoindent on
+endif
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+if &term=="xterm" || $TERM=="xterm-color"
+     set t_Co=8
+     set t_Sb=^[4%dm
+     set t_Sf=^[3%dm
+     execute 'set t_kb=' . nr2char(8)
+     fixdel
+endif
+set sm
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set textwidth=80
+set expandtab
+if has("multi_byte")
+    if &termencoding == ""
+        let &termencoding = &encoding
+    endif
+    set encoding=utf-8
+    setglobal fileencoding=utf-8
+    "setglobal bomb
+    set fileencodings=ucs-bom,utf-8,latin1
+endif
+color darkblue

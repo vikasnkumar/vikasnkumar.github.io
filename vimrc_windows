@@ -1,0 +1,35 @@
+set nocompatible
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+colorscheme pablo
+syntax on
+set hlsearch
+set sm
+set shiftwidth=4
+set tw=80
+set tabstop=4
+set softtabstop=4
+set guifont=Courier_New:h11:cDEFAULT
+set nobackup
+set history=50
+set ruler
+if has("autocmd")
+	filetype plugin indent on
+	au BufWritePost *.c,*.cpp,*.h,*.cl silent! !ctags.exe -R --langmap=c:+.cl > NUL &
+    "	au BufWritePost *.pm,*.pl silent! !ctags.exe -R -a --Perl-kinds=+ > NUL &
+	au BufWritePost *.c,*.cpp,*.h set tw=80 fo=croqt
+	au BufNewFile,BufRead *.pm,*.pl set textwidth=80
+	au BufNewFile,BufRead *.tt2 set filetype=tt2html
+	au BufNewFile,BufRead *.cl setfiletype=opencl
+	au BufWritePost *.cl set tw=80 fo=croqt
+    au BufNewFile,BufRead *.vhd,*.VHD set textwidth=120
+    au BufNewFile,BufRead *.vic set filetype=vic
+"    au BufWritePost *.vhd silent! !ctags.exe -R -a --exclude="_build*" --exclude=".*.swp" > NUL &
+else
+	set autoindent
+endif
+color darkblue
+set expandtab
+
